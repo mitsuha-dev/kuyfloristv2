@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kyuflorist - Toko Bunga Bucket Bali</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide-react@latest/dist/lucide-react.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Custom styles to extend Tailwind */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FEFBF6; /* A very soft off-white */
+        }
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Custom colors for the theme */
+        .bg-soft-pink { background-color: #FADADD; }
+        .bg-soft-blue { background-color: #BDE0FE; }
+        .bg-soft-green { background-color: #D4EEDD; }
+        .text-brand-dark { color: #2C3E50; }
+        .btn-primary {
+            background-color: #FF8FAB; /* A stronger pink for CTA */
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #FB6F92;
+        }
+        /* Style for the modal */
+        #product-modal {
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.3s ease;
+        }
+        /* Loading spinner */
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 5px solid #FFF;
+            border-bottom-color: #FF8FAB;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .product-card {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        /* Mobile menu */
+        #mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        #mobile-menu.active {
+            max-height: 300px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-40 shadow-sm">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-display text-brand-dark font-bold">Kyuflorist 🌹</a>
+            
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden text-gray-600">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+            
+            <nav class="hidden md:flex space-x-8 items-center">
+                <a href="#hero" class="text-gray-600 hover:text-brand-dark transition">Home</a>
+                <a href="#products" class="text-gray-600 hover:text-brand-dark transition">Katalog</a>
+                <a href="#info" class="text-gray-600 hover:text-brand-dark transition">Info Toko</a>
+                <a href="#contact" class="text-gray-600 hover:text-brand-dark transition">Lokasi</a>
+            </nav>
+            <a href="https://wa.me/6285847499015?text=Halo%20Kyuflorist,%20saya%20mau%20pesan%20bunga%20urgent." target="_blank" class="btn-primary px-4 py-2 rounded-full font-semibold flex items-center space-x-2">
+                <i data-lucide="zap" class="w-4 h-4"></i>
+                <span>Order Cepat</span>
+            </a>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden bg-white shadow-lg">
+            <div class="container mx-auto px-6 py-4 flex flex-col space-y-3">
+                <a href="#hero" class="text-gray-600 hover:text-brand-dark transition py-2">Home</a>
+                <a href="#products" class="text-gray-600 hover:text-brand-dark transition py-2">Katalog</a>
+                <a href="#info" class="text-gray-600 hover:text-brand-dark transition py-2">Info Toko</a>
+                <a href="#contact" class="text-gray-600 hover:text-brand-dark transition py-2">Lokasi</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="relative text-center py-20 md:py-32 px-6 bg-soft-pink">
+            <div class="absolute inset-0 bg-cover bg-center opacity-20" style="background-image: url('https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?q=80&w=1920&auto=format&fit=crop');"></div>
+            <div class="relative z-10">
+                <h1 class="text-4xl md:text-6xl font-display font-bold text-brand-dark">Bucket Bunga Cantik di Bali</h1>
+                <p class="mt-4 text-lg md:text-xl text-gray-700 max-w-2xl mx-auto">Toko Bunga Sejak 2021. Temukan rangkaian bunga sempurna untuk setiap momen spesial Anda.</p>
+                <a href="#products" class="mt-8 inline-block btn-primary px-8 py-4 rounded-full text-lg font-bold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition">
+                    Lihat Katalog Produk
+                </a>
+            </div>
+        </section>
+
+        <!-- Info Section -->
+        <section id="info" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-soft-green p-6 rounded-xl shadow-md">
+                        <i data-lucide="clock" class="w-12 h-12 mx-auto text-green-700"></i>
+                        <h3 class="font-bold text-xl mt-4 text-brand-dark">Jam Operasional</h3>
+                        <p class="text-gray-600 mt-2">Setiap Hari: 09.00 - 20.00 WITA</p>
+                    </div>
+                    <div class="bg-soft-blue p-6 rounded-xl shadow-md">
+                        <i data-lucide="truck" class="w-12 h-12 mx-auto text-blue-700"></i>
+                        <h3 class="font-bold text-xl mt-4 text-brand-dark">Pengiriman Tersedia</h3>
+                        <p class="text-gray-600 mt-2">Kami siap mengantar pesanan Anda ke seluruh area Denpasar dan sekitarnya.</p>
+                    </div>
+                    <div class="bg-soft-pink p-6 rounded-xl shadow-md">
+                        <i data-lucide="phone-call" class="w-12 h-12 mx-auto text-pink-700"></i>
+                        <h3 class="font-bold text-xl mt-4 text-brand-dark">Urgent Order</h3>
+                        <p class="text-gray-600 mt-2">Hubungi 0858-4749-9015 untuk pesanan mendadak.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section id="products" class="py-16">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl md:text-4xl font-display font-bold text-center text-brand-dark">Katalog Produk Kami</h2>
+                <p class="text-center text-gray-600 mt-2 mb-10">Temukan buket yang paling sesuai dengan selera dan anggaran Anda.</p>
+
+                <!-- Filter and Search Controls -->
+                <div class="flex flex-col md:flex-row gap-4 mb-8 sticky top-20 bg-white/90 backdrop-blur-md p-4 rounded-xl shadow-md z-30">
+                    <div class="relative flex-grow">
+                        <input type="text" id="search-input" placeholder="Cari nama produk..." class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition">
+                        <i data-lucide="search" class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                    <div class="relative">
+                         <select id="category-filter" class="w-full md:w-64 appearance-none pl-4 pr-10 py-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition">
+                            <option value="all">Semua Kategori Harga</option>
+                            <option value="50k-100k">Rp 50.000 – Rp 100.000</option>
+                            <option value="100k-150k">Rp 100.000 – Rp 150.000</option>
+                            <option value="150k-200k">Rp 150.000 – Rp 200.000</option>
+                            <option value="200k-300k">Rp 200.000 – Rp 300.000</option>
+                            <option value="300k-500k">Rp 300.000 – Rp 500.000</option>
+                            <option value="500k-1M">Rp 500.000 – Rp 1.000.000</option>
+                        </select>
+                        <i data-lucide="chevron-down" class="w-5 h-5 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                    </div>
+                </div>
+
+                <!-- Product Grid -->
+                <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+                    <!-- Loading state -->
+                    <div id="loading-products" class="col-span-full flex justify-center py-12">
+                        <div class="loader"></div>
+                    </div>
+                </div>
+                 <p id="no-results" class="text-center text-gray-500 py-12 text-lg hidden">Oops! Produk yang Anda cari tidak ditemukan.</p>
+            </div>
+        </section>
+
+        <!-- Contact & Location Section -->
+        <section id="contact" class="py-16 bg-soft-green">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl md:text-4xl font-display font-bold text-brand-dark">Kunjungi Kami</h2>
+                <p class="text-gray-700 mt-2">Atau hubungi kami untuk pemesanan dan informasi lebih lanjut.</p>
+                <div class="mt-8 max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-lg flex flex-col md:flex-row items-center gap-8">
+                    <div class="w-full md:w-1/2 text-left">
+                        <h3 class="font-bold text-2xl text-brand-dark">📍 Kyuflorist</h3>
+                        <p class="mt-2 text-gray-600">Jl Bulu Indah No 10, Denpasar, Bali, Indonesia 80119</p>
+                        <a href="https://wa.me/6285847499015?text=Halo%20Kyuflorist,%20saya%20mau%20bertanya%20tentang%20produk." target="_blank" class="mt-6 inline-block bg-green-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-600 transition flex items-center justify-center space-x-2">
+                            <i data-lucide="message-circle" class="w-5 h-5"></i>
+                            <span>Chat via WhatsApp</span>
+                        </a>
+                    </div>
+                    <div class="w-full md:w-1/2 h-64 rounded-lg overflow-hidden">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3944.498818882046!2d115.1982186748981!3d-8.643340191402246!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd23f7a09855555%3A0x8c7855f52b6d1b7b!2sJl.%20Bulu%20Indah%20No.10%2C%20Pemecutan%20Kaja%2C%20Kec.%20Denpasar%20Utara%2C%20Kota%20Denpasar%2C%20Bali%2080111!5e0!3m2!1sen!2sid!4v1688647531234!5m2!1sen!2sid" 
+                            width="100%" 
+                            height="100%" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-brand-dark text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; <span id="year"></span> Kyuflorist. All Rights Reserved.</p>
+            <p class="text-sm text-gray-400 mt-2">Dibuat dengan ❤️ di Bali</p>
+        </div>
+    </footer>
+
+    <!-- Product Detail Modal -->
+    <div id="product-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 hidden opacity-0">
+        <div id="modal-content" class="bg-white rounded-xl shadow-2xl w-full max-w-[90vw] md:max-w-3xl max-h-[90vh] overflow-y-auto transform scale-95">
+            <div class="p-4 md:p-6 flex flex-col md:flex-row gap-6">
+                <img id="modal-img" src="https://placehold.co/600x600/FADADD/333?text=Bunga" alt="Product Image" class="w-full md:w-1/2 h-auto object-cover rounded-lg">
+                <div class="flex-1">
+                    <div class="flex justify-between items-start">
+                        <h2 id="modal-title" class="text-2xl md:text-3xl font-bold font-display text-brand-dark">Nama Produk</h2>
+                        <button id="close-modal" class="text-gray-500 hover:text-red-500 transition">
+                            <i data-lucide="x" class="w-8 h-8"></i>
+                        </button>
+                    </div>
+                    <p id="modal-price" class="text-xl font-semibold text-pink-500 mt-2">Rp 100.000 - Rp 150.000</p>
+                    <p id="modal-description" class="text-gray-600 mt-4 break-words">Deskripsi produk yang detail akan muncul di sini, menjelaskan tentang komposisi bunga dan keindahannya.</p>
+                    <div class="mt-6 border-t pt-4">
+                        <h4 class="font-bold text-brand-dark">Tertarik dengan produk ini?</h4>
+                        <p class="text-sm text-gray-500">Hubungi kami untuk memesan atau bertanya lebih lanjut.</p>
+                        <a id="modal-wa-link" href="#" target="_blank" class="mt-4 w-full inline-block bg-green-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-600 transition flex items-center justify-center space-x-2">
+                            <i data-lucide="message-circle" class="w-5 h-5"></i>
+                            <span>Pesan via WhatsApp</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DATA PRODUK ---
+            const products = [
+                { 
+                    id: 1, 
+                    name: "Mini Bouquet Mawar", 
+                    price: "Rp 50.000 – Rp 100.000", 
+                    category: "50k-100k", 
+                    description: "3 tangkai mawar lokal, simpel dan elegan.", 
+                    image: "https://images.unsplash.com/photo-1567605704774-c346a79a50a3?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 2, 
+                    name: "Buket Origami", 
+                    price: "Rp 50.000 – Rp 100.000", 
+                    category: "50k-100k", 
+                    description: "Bunga dari kertas warna-warni, tahan lama.", 
+                    image: "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 3, 
+                    name: "Buket Sabun Mini", 
+                    price: "Rp 50.000 – Rp 100.000", 
+                    category: "50k-100k", 
+                    description: "Bunga dari sabun wangi, cocok untuk hadiah kecil.", 
+                    image: "https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 4, 
+                    name: "Buket Snack Mini", 
+                    price: "Rp 50.000 – Rp 100.000", 
+                    category: "50k-100k", 
+                    description: "Camilan ringan dibungkus seperti bunga.", 
+                    image: "https://images.unsplash.com/photo-1556906781-9a412961c28c?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 5, 
+                    name: "Buket Cotton Mini", 
+                    price: "Rp 50.000 – Rp 100.000", 
+                    category: "50k-100k", 
+                    description: "Kombinasi bunga kapas imitasi dan hiasan pita.", 
+                    image: "https://images.unsplash.com/photo-1617902341219-95584285856b?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 6, 
+                    name: "Buket Mawar 5 Tangkai", 
+                    price: "Rp 100.000 – Rp 150.000", 
+                    category: "100k-150k", 
+                    description: "Mawar merah/pink lokal, cocok untuk pacar.", 
+                    image: "https://images.unsplash.com/photo-1599081609653-761a34b2b39f?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 7, 
+                    name: "Buket Daisy Campur", 
+                    price: "Rp 100.000 – Rp 150.000", 
+                    category: "100k-150k", 
+                    description: "Warna pastel, ceria dan lembut.", 
+                    image: "https://images.unsplash.com/photo-1557936648-8224c5f9df13?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 8, 
+                    name: "Mini Bloom Box", 
+                    price: "Rp 100.000 – Rp 150.000", 
+                    category: "100k-150k", 
+                    description: "Kotak kecil dengan bunga segar mix.", 
+                    image: "https://images.unsplash.com/photo-1579611891965-c793a61636a2?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 9, 
+                    name: "Buket Gerbera Ceria", 
+                    price: "Rp 100.000 – Rp 150.000", 
+                    category: "100k-150k", 
+                    description: "Gerbera warna-warni, cerah dan menyenangkan.", 
+                    image: "https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 10, 
+                    name: "Buket Balon & Bunga", 
+                    price: "Rp 100.000 – Rp 150.000", 
+                    category: "100k-150k", 
+                    description: "Balon helium + 3 tangkai mawar.", 
+                    image: "https://images.unsplash.com/photo-1562250886-7a14c31b0a2f?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 11, 
+                    name: "Buket Mawar Mix", 
+                    price: "Rp 150.000 – Rp 200.000", 
+                    category: "150k-200k", 
+                    description: "6 tangkai mawar berbagai warna.", 
+                    image: "https://images.unsplash.com/photo-1542845521-fb4569430311?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 12, 
+                    name: "Buket Baby’s Breath", 
+                    price: "Rp 150.000 – Rp 200.000", 
+                    category: "150k-200k", 
+                    description: "Penuh gypsophila, putih bersih.", 
+                    image: "https://images.unsplash.com/photo-1587317399334-b9c19b368e70?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 13, 
+                    name: "Buket Lily Mini", 
+                    price: "Rp 150.000 – Rp 200.000", 
+                    category: "150k-200k", 
+                    description: "Lily oriental segar 2–3 tangkai.", 
+                    image: "https://images.unsplash.com/photo-1604523921312-39e238031a29?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 14, 
+                    name: "Buket Snack Medium", 
+                    price: "Rp 150.000 – Rp 200.000", 
+                    category: "150k-200k", 
+                    description: "Snack + bunga artifisial dalam satu rangkaian.", 
+                    image: "https://images.unsplash.com/photo-1586473219010-2ffc57b0d282?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 15, 
+                    name: "Buket Sunflower & Daisy", 
+                    price: "Rp 150.000 – Rp 200.000", 
+                    category: "150k-200k", 
+                    description: "Matahari + daisy, cerah dan natural.", 
+                    image: "https://images.unsplash.com/photo-1626081022428-765a6a68297e?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 16, 
+                    name: "Buket Mawar 12 Tangkai", 
+                    price: "Rp 200.000 – Rp 300.000", 
+                    category: "200k-300k", 
+                    description: "Satu lusin mawar lokal, padat dan manis.", 
+                    image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 17, 
+                    name: "Buket Anyelir & Lily", 
+                    price: "Rp 200.000 – Rp 300.000", 
+                    category: "200k-300k", 
+                    description: "Kombinasi feminim dan wangi.", 
+                    image: "https://images.unsplash.com/photo-1569549149948-36886e5944b3?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 18, 
+                    name: "Buket Graduation", 
+                    price: "Rp 200.000 – Rp 300.000", 
+                    category: "200k-300k", 
+                    description: "Bunga + boneka + scroll, untuk wisuda.", 
+                    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 19, 
+                    name: "Buket Hydrangea", 
+                    price: "Rp 200.000 – Rp 300.000", 
+                    category: "200k-300k", 
+                    description: "Hydrangea besar dengan wrapping mewah.", 
+                    image: "https://images.unsplash.com/photo-1604353842194-21ab151f894f?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 20, 
+                    name: "Buket Lily Putih Elegan", 
+                    price: "Rp 200.000 – Rp 300.000", 
+                    category: "200k-300k", 
+                    description: "Lily putih + pita satin.", 
+                    image: "https://images.unsplash.com/photo-1582794270401-218a59a2455a?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 21, 
+                    name: "Buket Mix Tropical", 
+                    price: "Rp 300.000 – Rp 500.000", 
+                    category: "300k-500k", 
+                    description: "Heliconia, monstera, dan bunga tropis.", 
+                    image: "https://images.unsplash.com/photo-1533616688484-4b4a6931a5c1?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 22, 
+                    name: "Bloom Box Premium", 
+                    price: "Rp 300.000 – Rp 500.000", 
+                    category: "300k-500k", 
+                    description: "Komposisi bunga segar dalam kotak mewah.", 
+                    image: "https://images.unsplash.com/photo-1576902783889-e34918395d88?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 23, 
+                    name: "Buket Mawar Impor", 
+                    price: "Rp 300.000 – Rp 500.000", 
+                    category: "300k-500k", 
+                    description: "Red Naomi atau Ecuador rose.", 
+                    image: "https://images.unsplash.com/photo-1618265413899-91d4a99933ba?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 24, 
+                    name: "Buket Anggrek Mini", 
+                    price: "Rp 300.000 – Rp 500.000", 
+                    category: "300k-500k", 
+                    description: "3 tangkai Phalaenopsis segar.", 
+                    image: "https://images.unsplash.com/photo-1560093229-3a32a6938162?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 25, 
+                    name: "Buket Ferrero & Mawar", 
+                    price: "Rp 300.000 – Rp 500.000", 
+                    category: "300k-500k", 
+                    description: "6 tangkai mawar + 6 Ferrero.", 
+                    image: "https://images.unsplash.com/photo-1585144860881-7b3cdb9b58d3?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 26, 
+                    name: "Buket 24 Mawar", 
+                    price: "Rp 500.000 – Rp 1.000.000", 
+                    category: "500k-1M", 
+                    description: "Mawar penuh warna cinta, padat dan simetris.", 
+                    image: "https://images.unsplash.com/photo-1565908582962-d92205e1a396?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 27, 
+                    name: "Bloom Box Anggrek", 
+                    price: "Rp 500.000 – Rp 1.000.000", 
+                    category: "500k-1M", 
+                    description: "Phalaenopsis + foliage, sangat mewah.", 
+                    image: "https://images.unsplash.com/photo-1620714230856-42a15556937e?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 28, 
+                    name: "Buket Premium Rustic", 
+                    price: "Rp 500.000 – Rp 1.000.000", 
+                    category: "500k-1M", 
+                    description: "Kombinasi bunga kering & lily putih.", 
+                    image: "https://images.unsplash.com/photo-1598885193259-c12521a89047?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 29, 
+                    name: "Buket Wedding Exclusive", 
+                    price: "Rp 500.000 – Rp 1.000.000", 
+                    category: "500k-1M", 
+                    description: "Untuk acara pernikahan dengan detail elegan.", 
+                    image: "https://images.unsplash.com/photo-1551893668-5c43a26d14f3?q=80&w=600&auto=format&fit=crop" 
+                },
+                { 
+                    id: 30, 
+                    name: "Buket Anniversary Custom", 
+                    price: "Rp 500.000 – Rp 1.000.000", 
+                    category: "500k-1M", 
+                    description: "Rangkaian sesuai permintaan dengan kartu spesial.", 
+                    image: "https://images.unsplash.com/photo-1533038590840-1cde6e668a91?q=80&w=600&auto=format&fit=crop" 
+                }
+            ];
+
+            // --- DOM ELEMENTS ---
+            const productGrid = document.getElementById('product-grid');
+            const searchInput = document.getElementById('search-input');
+            const categoryFilter = document.getElementById('category-filter');
+            const noResults = document.getElementById('no-results');
+            const loadingProducts = document.getElementById('loading-products');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            // Modal elements
+            const modal = document.getElementById('product-modal');
+            const modalContent = document.getElementById('modal-content');
+            const closeModalBtn = document.getElementById('close-modal');
+            const modalImg = document.getElementById('modal-img');
+            const modalTitle = document.getElementById('modal-title');
+            const modalPrice = document.getElementById('modal-price');
+            const modalDescription = document.getElementById('modal-description');
+            const modalWaLink = document.getElementById('modal-wa-link');
+
+            // --- FUNCTIONS ---
+
+            // Function to display products in the grid
+            function displayProducts(productsToDisplay) {
+                productGrid.innerHTML = '';
+                
+                if (productsToDisplay.length === 0) {
+                    noResults.classList.remove('hidden');
+                } else {
+                    noResults.classList.add('hidden');
+                    
+                    productsToDisplay.forEach((product, index) => {
+                        const productCard = `
+                            <div class="product-card bg-white rounded-lg shadow-md overflow-hidden cursor-pointer group transform hover:-translate-y-2 transition-transform duration-300 delay-${(index % 5) * 100}" data-id="${product.id}">
+                                <div class="relative">
+                                    <img src="${product.image}" alt="${product.name}" class="w-full h-48 sm:h-56 object-cover" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/600x600/eee/ccc?text=Gagal+Muat'">
+                                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
+                                        <span class="text-white text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 px-3 py-1 rounded-full">Lihat Detail</span>
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <h3 class="font-bold text-md text-brand-dark truncate">${product.name}</h3>
+                                    <p class="text-sm text-pink-600 font-semibold mt-1">${product.price}</p>
+                                </div>
+                            </div>
+                        `;
+                        productGrid.innerHTML += productCard;
+                    });
+                }
+                
+                loadingProducts.classList.add('hidden');
+            }
+
+            // Function to filter and search products
+            function filterAndSearch() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const selectedCategory = categoryFilter.value;
+
+                const filteredProducts = products.filter(product => {
+                    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
+                    const matchesSearch = product.name.toLowerCase().includes(searchTerm);
+                    return matchesCategory && matchesSearch;
+                });
+
+                displayProducts(filteredProducts);
+            }
+            
+            // Function to open the modal with product details
+            function openModal(productId) {
+                const product = products.find(p => p.id == productId);
+                if (!product) return;
+
+                modalImg.src = product.image;
+                modalImg.onerror = function() {
+                    this.onerror=null;
+                    this.src='https://placehold.co/600x600/eee/ccc?text=Gagal+Muat';
+                };
+                modalImg.alt = product.name;
+                modalTitle.textContent = product.name;
+                modalPrice.textContent = product.price;
+                modalDescription.textContent = product.description;
+                
+                const waMessage = `Halo Kyuflorist, saya tertarik dengan produk "${product.name}" (${product.price}). Apakah ready?`;
+                modalWaLink.href = `https://wa.me/6285847499015?text=${encodeURIComponent(waMessage)}`;
+
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    modalContent.classList.remove('scale-95');
+                }, 10); // small delay for transition
+            }
+
+            // Function to close the modal
+            function closeModal() {
+                 modal.classList.add('opacity-0');
+                 modalContent.classList.add('scale-95');
+                 setTimeout(() => {
+                    modal.classList.add('hidden');
+                 }, 300); // match transition duration
+            }
+            
+            // Toggle mobile menu
+            function toggleMobileMenu() {
+                mobileMenu.classList.toggle('active');
+                
+                const menuIcon = mobileMenuButton.querySelector('i');
+                if (mobileMenu.classList.contains('active')) {
+                    menuIcon.setAttribute('data-lucide', 'x');
+                } else {
+                    menuIcon.setAttribute('data-lucide', 'menu');
+                }
+                lucide.createIcons();
+            }
+
+            // --- EVENT LISTENERS ---
+            searchInput.addEventListener('input', filterAndSearch);
+            categoryFilter.addEventListener('change', filterAndSearch);
+            
+            mobileMenuButton.addEventListener('click', toggleMobileMenu);
+
+            // Close mobile menu when clicking on links
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                    const menuIcon = mobileMenuButton.querySelector('i');
+                    menuIcon.setAttribute('data-lucide', 'menu');
+                    lucide.createIcons();
+                });
+            });
+
+            // Event delegation for product card clicks
+            productGrid.addEventListener('click', (e) => {
+                const card = e.target.closest('.product-card');
+                if (card) {
+                    const productId = card.dataset.id;
+                    openModal(productId);
+                }
+            });
+            
+            // Modal close events
+            closeModalBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                // Close if clicked on the background overlay
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+            
+            // Close modal with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                    closeModal();
+                }
+            });
+
+
+            // --- INITIALIZATION ---
+            // Simulate loading time
+            setTimeout(() => {
+                displayProducts(products);
+            }, 800);
+            
+            lucide.createIcons(); // Initialize icons
+            document.getElementById('year').textContent = new Date().getFullYear(); // Set current year in footer
+        });
+    </script>
+</body>
+</html>
